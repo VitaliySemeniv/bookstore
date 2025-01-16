@@ -1,34 +1,176 @@
-
-<!-- frontend/templates/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Frontend Service</title>
-</head>
-<body>
-    <h1>Test Connections</h1>
-    <button id="test-rds-btn">Test RDS Connection</button>
-    <button id="test-redis-btn">Test Redis Connection</button>
+    <style>
+      body {
+        font-family: consolas;
+        color: #000;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+        background-color: #113311;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 20 20'%3E%3Cg fill-opacity='0.72'%3E%3Cpolygon fill='%23242' points='20 10 10 0 0 0 20 20'/%3E%3Cpolygon fill='%23242' points='0 10 0 20 10 20'/%3E%3C/g%3E%3C/svg%3E");
+      }
 
-    <div id="results"></div>
+      .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(6px);
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      .test-section {
+        margin-bottom: 20px;
+      }
+
+      .input-block {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      input {
+        width: 80%;
+        border-radius: 8px;
+        padding: 10px;
+        border: 1px solid #7a7a7a;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #28a745;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #218838;
+      }
+
+      .loading {
+        width: 16px;
+        height: 16px;
+        border: 3px solid #ccc;
+        border-top: 3px solid #0a4483;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      p {
+        margin-top: 10px;
+        font-size: 16px;
+        text-align: left;
+      }
+
+      p.error {
+        color: red;
+      }
+
+      p.success {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Test Backend Connections</h1>
+
+      <!-- RDS -->
+      <div class="test-section">
+        <button id="test-rds-btn">Test RDS Connection</button>
+        <p id="rds-result"></p>
+      </div>
+
+      <!-- Redis -->
+      <div class="test-section">
+        <button id="test-redis-btn">Test Redis Connection</button>
+        <p id="redis-result"></p>
+      </div>
+    </div>
 
     <script>
-        document.getElementById('test-rds-btn').addEventListener('click', function() {
-            fetch('/test_rds/')
-                .then(response => response.json())
-                .then(data => document.getElementById('results').innerText = JSON.stringify(data))
-                .catch(error => document.getElementById('results').innerText = 'Error: ' + error);
-        });
+      function showLoaderRDS() {
+        const rdsResult = document.getElementById("rds-result");
+        rdsResult.innerHTML = '<div class="loading"></div> Testing RDS connection...';
+      }
 
-        document.getElementById('test-redis-btn').addEventListener('click', function() {
-            fetch('/test_redis/')
-                .then(response => response.json())
-                .then(data => document.getElementById('results').innerText = JSON.stringify(data))
-                .catch(error => document.getElementById('results').innerText = 'Error: ' + error);
-        });
+      function showLoaderRedis() {
+        const redisResult = document.getElementById("redis-result");
+        redisResult.innerHTML = '<div class="loading"></div> Testing Redis connection...';
+      }
+
+      function hideLoader(resultElement) {
+        resultElement.innerHTML = "";
+      }
+
+      const rdsResult = document.getElementById("rds-result");
+      const redisResult = document.getElementById("redis-result");
+
+      // RDS Button Click
+      document.getElementById("test-rds-btn").addEventListener("click", () => {
+        const rdsUrl = "/test_rds/";
+        showLoaderRDS();
+        fetch(rdsUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP Error: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            rdsResult.textContent = `RDS Response: ${JSON.stringify(data, null, 2)}`;
+            rdsResult.style.color = "green";
+          })
+          .catch((error) => {
+            rdsResult.textContent = `Error: ${error.message}`;
+            rdsResult.style.color = "red";
+          });
+      });
+
+      // Redis Button Click
+      document.getElementById("test-redis-btn").addEventListener("click", () => {
+        const redisUrl = "/test_redis/";
+        showLoaderRedis();
+        fetch(redisUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP Error: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            redisResult.textContent = `Redis Response: ${JSON.stringify(data, null, 2)}`;
+            redisResult.style.color = "green";
+          })
+          .catch((error) => {
+            redisResult.textContent = `Error: ${error.message}`;
+            redisResult.style.color = "red";
+          });
+      });
     </script>
-</body>
+  </body>
 </html>
