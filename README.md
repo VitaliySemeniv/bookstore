@@ -123,7 +123,7 @@ In the final step, integrate data storage and caching:
 
 ## CI/CD Process
 
-Setting up a CI/CD pipeline is essential for automating the build, test, and deployment processes. You can choose to use either **GitHub Actions** or **GitLab CI/CD** based on your preference. Here are the general steps:
+Setting up a CI/CD pipeline is essential for automating the build and deployment processes. You can choose to use either **GitHub Actions** or **GitLab CI/CD** based on your preference. Here are the general steps:
 
 1. **Pipeline Configuration**:
 
