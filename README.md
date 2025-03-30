@@ -128,21 +128,14 @@ Setting up a CI/CD pipeline is essential for automating the build, test, and dep
 1. **Pipeline Configuration**:
 
    - Define a pipeline in GitHub Actions or in GitLab CI/CD.
-   - Include stages for building Docker images, running tests, and deploying to AWS.
+   - Include stages for building Docker images and deploying to AWS.
+   - Store sensitive data, such as AWS credentials, database connection strings, and API keys, securely within the CI/CD platform.
 
 2. **Docker Integration**:
 
    - Configure the pipeline to build and push Docker images to Amazon ECR.
 
-3. **Environment Variables**:
-
-   - Store sensitive data, such as AWS credentials, database connection strings, and API keys, securely within the CI/CD platform.
-
-4. **Testing**:
-
-   - Add automated tests to validate the backend and frontend components.
-
-5. **Deployment**:
+3. **Deployment**:
 
    - Deploy the backend and frontend to AWS EC2 instances as defined in the pipeline.
 
