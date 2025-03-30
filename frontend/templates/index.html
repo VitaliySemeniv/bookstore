@@ -3,174 +3,327 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Frontend Service</title>
+    <title>API Connection Tester</title>
     <style>
+      :root {
+        --color-primary: #4990e2;
+        --color-primary-dark: #357abd;
+        --color-success: #49cc90;
+        --color-success-bg: rgba(73, 204, 144, 0.1);
+        --color-error: #f93e3e;
+        --color-error-bg: rgba(249, 62, 62, 0.1);
+        --color-text: #3b4151;
+        --color-text-secondary: #666;
+        --color-border: #e8e8e8;
+        --color-bg: #fafafa;
+        --color-bg-dark: rgb(51, 51, 51);
+        --color-bg-light: #f7f7f7;
+        --radius-sm: 3px;
+        --radius-md: 4px;
+        --shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+        --font-mono: monospace;
+        --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        --spacing-sm: 8px;
+        --spacing-md: 12px;
+        --spacing-lg: 16px;
+      }
+
+      /* Base styles */
       body {
-        font-family: consolas;
-        color: #000;
+        font-family: var(--font-sans);
         margin: 0;
-        padding: 20px;
-        text-align: center;
-        background-color: #113311;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 20 20'%3E%3Cg fill-opacity='0.72'%3E%3Cpolygon fill='%23242' points='20 10 10 0 0 0 20 20'/%3E%3Cpolygon fill='%23242' points='0 10 0 20 10 20'/%3E%3C/g%3E%3C/svg%3E");
+        padding: 0;
+        background-color: var(--color-bg);
+        color: var(--color-text);
       }
 
       .container {
-        max-width: 800px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: rgba(255, 255, 255, 0.6);
-        backdrop-filter: blur(6px);
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 1460px;
+        margin: 0 auto;
+        padding: var(--spacing-lg);
       }
 
       h1 {
-        margin-bottom: 20px;
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 40px;
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 1px solid var(--color-border);
       }
 
+      /* Endpoint section */
       .test-section {
-        margin-bottom: 20px;
+        margin-bottom: var(--spacing-sm);
+        background-color: #fff;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow);
       }
 
-      .input-block {
-        margin-bottom: 10px;
+      .endpoint-header {
+        padding: var(--spacing-sm);
+        background: var(--color-bg-light);
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        gap: var(--spacing-md);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
       }
 
-      input {
-        width: 80%;
-        border-radius: 8px;
-        padding: 10px;
-        border: 1px solid #7a7a7a;
-      }
-
-      button {
-        padding: 10px 20px;
-        font-size: 16px;
+      .method-badge {
+        background-color: var(--color-success);
         color: #fff;
-        background-color: #28a745;
+        padding: 4px var(--spacing-sm);
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 700;
+        min-width: 80px;
+        text-align: center;
+      }
+
+      .endpoint-url {
+        font-family: var(--font-mono);
+        font-size: 14px;
+      }
+
+      /* Button styles */
+      button {
+        background-color: var(--color-primary);
+        color: white;
         border: none;
-        border-radius: 5px;
+        padding: var(--spacing-sm) var(--spacing-lg);
+        border-radius: var(--radius-md);
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        font-size: 14px;
+        font-weight: 700;
+        transition: all .3s ease;
       }
 
       button:hover {
-        background-color: #218838;
+        background-color: var(--color-primary-dark);
+        transform: translateY(-1px);
       }
 
+      /* Response styles */
+      .response-wrapper {
+        padding: var(--spacing-sm);
+      }
+
+      .response-container {
+        margin: var(--spacing-sm) 0;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+      }
+
+      .response-header {
+        padding: var(--spacing-md) var(--spacing-lg);
+        background-color: var(--color-bg-light);
+        border-bottom: 1px solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        font-size: 14px;
+      }
+
+      .response-title {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+      }
+
+      .response-title strong {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .response-header > div:last-child {
+        color: var(--color-text-secondary);
+        font-size: 12px;
+      }
+
+      .status-code {
+        font-family: var(--font-mono);
+        padding: 4px var(--spacing-sm);
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: bold;
+        display: inline-block;
+        min-width: 80px;
+      }
+
+      .success .status-code {
+        color: var(--color-success);
+        background-color: var(--color-success-bg);
+      }
+
+      .error .status-code {
+        color: var(--color-error);
+        background-color: var(--color-error-bg);
+      }
+
+      .response-content {
+        padding: var(--spacing-md);
+        background-color: var(--color-bg-dark);
+        color: #fff;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        border-bottom-left-radius: var(--radius-md);
+        border-bottom-right-radius: var(--radius-md);
+      }
+
+      .success-container .response-header { border-left: 4px solid var(--color-success); }
+      .error-container .response-header { border-left: 4px solid var(--color-error); }
+
+      /* Loading animation */
       .loading {
-        width: 16px;
-        height: 16px;
-        border: 3px solid #ccc;
-        border-top: 3px solid #0a4483;
+        width: var(--spacing-lg);
+        height: var(--spacing-lg);
+        border: 2px solid var(--color-border);
+        border-top-color: var(--color-primary);
         border-radius: 50%;
         animation: spin 1s linear infinite;
+        margin-right: var(--spacing-sm);
       }
 
       @keyframes spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      p {
-        margin-top: 10px;
-        font-size: 16px;
-        text-align: left;
-      }
-
-      p.error {
-        color: red;
-      }
-
-      p.success {
-        color: green;
+        to { transform: rotate(360deg); }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Test Backend Connections</h1>
-
-      <!-- RDS -->
-      <div class="test-section">
-        <button id="test-rds-btn">Test RDS Connection</button>
-        <p id="rds-result"></p>
-      </div>
-
-      <!-- Redis -->
-      <div class="test-section">
-        <button id="test-redis-btn">Test Redis Connection</button>
-        <p id="redis-result"></p>
-      </div>
+      <h1>API Connection Tester</h1>
+      <div id="endpoints"></div>
     </div>
 
     <script>
-      function showLoaderRDS() {
-        const rdsResult = document.getElementById("rds-result");
-        rdsResult.innerHTML = '<div class="loading"></div> Testing RDS connection...';
-      }
+      // Configuration
+      const ENDPOINTS = [
+        { id: 'rds', name: 'RDS', url: '/test_rds/' },
+        { id: 'redis', name: 'Redis', url: '/test_redis/' }
+      ];
 
-      function showLoaderRedis() {
-        const redisResult = document.getElementById("redis-result");
-        redisResult.innerHTML = '<div class="loading"></div> Testing Redis connection...';
-      }
+      const STATUS = {
+        SUCCESS: { code: '200 OK', type: 'success' },
+        ERROR: { code: '500 Error', type: 'error' }
+      };
 
-      function hideLoader(resultElement) {
-        resultElement.innerHTML = "";
-      }
+      // DOM manipulation helpers
+      const getElement = id => document.getElementById(id);
+      const setHTML = (element, html) => element.innerHTML = html;
 
-      const rdsResult = document.getElementById("rds-result");
-      const redisResult = document.getElementById("redis-result");
+      // Template generators
+      const createEndpointHTML = ({ id, url }) => `
+        <div class="test-section">
+          <div class="endpoint-header">
+            <span class="method-badge">GET</span>
+            <span class="endpoint-url">${url}</span>
+            <button id="${id}-btn">Test Connection</button>
+          </div>
+          <div class="response-wrapper">
+            <div id="${id}-result"></div>
+          </div>
+        </div>`;
 
-      // RDS Button Click
-      document.getElementById("test-rds-btn").addEventListener("click", () => {
-        const rdsUrl = "/test_rds/";
-        showLoaderRDS();
-        fetch(rdsUrl)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP Error: ${response.status}`);
-            }
-            return response.json();
+      const createLoaderHTML = service => `
+        <div class="response-container">
+          <div class="response-header">
+            <div class="loading"></div>Testing ${service} connection...
+          </div>
+        </div>`;
+
+      const createResponseHTML = ({ type, status, title, content }) => `
+        <div class="response-container ${type}-container">
+          <div class="response-header">
+            <div class="response-title">
+              <span class="status-code ${type}">${status}</span>
+              <strong>${title}</strong>
+            </div>
+            <div>${type === 'success' ? 'Response body' : 'Error details'}</div>
+          </div>
+          <div class="response-content">${content}</div>
+        </div>`;
+
+      // Data formatting
+      const formatJSON = data => {
+        if (typeof data === 'string') {
+          try {
+            return JSON.stringify(JSON.parse(data), null, 2);
+          } catch (e) {
+            return data;
+          }
+        }
+        return JSON.stringify(data, null, 2);
+      };
+
+      // UI update functions
+      const showLoader = (elementId, service) => {
+        setHTML(getElement(elementId), createLoaderHTML(service));
+      };
+
+      const showResponse = (elementId, { success, title, data }) => {
+        const status = success ? STATUS.SUCCESS : STATUS.ERROR;
+        setHTML(
+          getElement(elementId),
+          createResponseHTML({
+            type: status.type,
+            status: status.code,
+            title,
+            content: formatJSON(data)
           })
-          .then((data) => {
-            rdsResult.textContent = `RDS Response: ${JSON.stringify(data, null, 2)}`;
-            rdsResult.style.color = "green";
-          })
-          .catch((error) => {
-            rdsResult.textContent = `Error: ${error.message}`;
-            rdsResult.style.color = "red";
+        );
+      };
+
+      // API interaction
+      async function testConnection(endpoint) {
+        const resultId = `${endpoint.id}-result`;
+        showLoader(resultId, endpoint.name);
+        
+        try {
+          const response = await fetch(endpoint.url);
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(JSON.stringify(data));
+          }
+          
+          showResponse(resultId, {
+            success: true,
+            title: `${endpoint.name} Connection Successful`,
+            data
           });
-      });
-
-      // Redis Button Click
-      document.getElementById("test-redis-btn").addEventListener("click", () => {
-        const redisUrl = "/test_redis/";
-        showLoaderRedis();
-        fetch(redisUrl)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP Error: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            redisResult.textContent = `Redis Response: ${JSON.stringify(data, null, 2)}`;
-            redisResult.style.color = "green";
-          })
-          .catch((error) => {
-            redisResult.textContent = `Error: ${error.message}`;
-            redisResult.style.color = "red";
+        } catch (error) {
+          let errorData;
+          try {
+            errorData = JSON.parse(error.message);
+          } catch {
+            errorData = { message: error.message };
+          }
+          
+          showResponse(resultId, {
+            success: false,
+            title: `${endpoint.name} Connection Failed`,
+            data: errorData
           });
-      });
+        }
+      }
+
+      // Initialization
+      function init() {
+        setHTML(
+          getElement('endpoints'),
+          ENDPOINTS.map(createEndpointHTML).join('')
+        );
+
+        ENDPOINTS.forEach(endpoint => {
+          getElement(`${endpoint.id}-btn`)
+            .addEventListener('click', () => testConnection(endpoint));
+        });
+      }
+
+      // Start the application
+      init();
     </script>
   </body>
 </html>
