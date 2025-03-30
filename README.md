@@ -36,38 +36,6 @@ The platform utilizes PostgreSQL for database management and Redis for caching, 
   - `requirements.txt`: Lists frontend dependencies.
   - `frontend/`: Contains configuration files, routing, views, and templates for the frontend interface.
 
-
-## Lifehacks
-
-**Use ChatGPT everywhere**
-
-**But don't ask it to write the code or solutions for you.**
-
-Initially, use it to understand the diagram, all the interconnections on it, and why everything is arranged this way.
-
-Next, use it when taking courses to find the information you need for the project's implementation. Use it here to deepen your understanding, create more examples and analogies. Break concepts into the simplest levels of abstraction and show maximum creativity when working with it.
-
-Refer back to the course we took initially (about ChatGPT), recall the methods and strategies of prompts, and use them.
-Your main task is not just to implement the project but to learn how to break down new information into the simplest pieces with ChatGPT and build understanding as quickly as possible.
-
-## Deployment Flow
-
-### Local Testing
-- Follow the steps in **Local Testing** to set up and validate the application locally using Docker Compose.
-
-### Step 1: Deploying the Basic Architecture
-- Deploy the backend services on EC2 instances in a public subnet as described in **Step 1: Deploying the Basic Architecture**.
-
-### Step 2: Introducing Load Balancing
-- Set up an Application Load Balancer (ALB) as outlined in **Step 2: Introducing Load Balancing** to distribute traffic across multiple backend instances.
-
-### Step 3: Incorporating Databases and Caching
-- Implement secure database and caching services using RDS and ElastiCache in a private subnet as described in **Step 3: Incorporating Databases and Caching**.
-
-### CI/CD Process
-
-- Implement separate CI/CD pipelines for backend and frontend deployment to automate the process effectively.
-
 ## Local Testing
 
 ### Step 1: Cloning the Repository
@@ -180,11 +148,12 @@ Setting up a CI/CD pipeline is essential for automating the build, test, and dep
 
 ## Final Thoughts
 
-Congratulations on successfully setting up and integrating your bookstore application with AWS! This project not only demonstrates the fundamentals of scalable and efficient application design but also equips you with the skills to deploy and manage real-world systems. Keep exploring, iterating, and improving as you grow in your DevOps journey. 
+Congratulations on successfully setting up and integrating your bookstore application with AWS! 
 
 <p align="center">
-  <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDBkenpleWp5Y3NkZ3h0NDRoMTlxbXFmN2h4MGpvaWg3cGpkOHFhOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/10Shl99Vghh5aU/giphy.gif" width="50%">
+  <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDBkenpleWp5Y3NkZ3h0NDRoMTlxbXFmN2h4MGpvaWg3cGpkOHFhOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/10Shl99Vghh5aU/giphy.gif" width="70%">
 </p>
 
+This project not only demonstrates the fundamentals of scalable and efficient application design but also equips you with the skills to deploy and manage real-world systems. Keep exploring, iterating, and improving as you grow in your DevOps journey. 
 
 Great work!
