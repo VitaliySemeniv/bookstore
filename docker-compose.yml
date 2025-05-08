@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: bookstore
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis
+
+  backend_rds:
+    build: ./backend_rds
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=bookstore
+      - DB_USER=user
+      - DB_PASSWORD=password
+
+  backend_redis:
+    build: ./backend_redis
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:
