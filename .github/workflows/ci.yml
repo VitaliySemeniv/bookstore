@@ -1,0 +1,46 @@
+name: CI/CD for Bookstore
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: eu-north-1
+      BACKEND_RDS_REPO: 084375565324.dkr.ecr.eu-north-1.amazonaws.com/bookstore-backend-rds
+      BACKEND_REDIS_REPO: 084375565324.dkr.ecr.eu-north-1.amazonaws.com/bookstore-backend-redis
+      FRONTEND_REPO: 084375565324.dkr.ecr.eu-north-1.amazonaws.com/bookstore-frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build & Push backend-rds
+        run: |
+          docker build -t $BACKEND_RDS_REPO ./backend_rds
+          docker push $BACKEND_RDS_REPO
+
+      - name: Build & Push backend-redis
+        run: |
+          docker build -t $BACKEND_REDIS_REPO ./backend_redis
+          docker push $BACKEND_REDIS_REPO
+
+      - name: Build & Push frontend
+        run: |
+          docker build -t $FRONTEND_REPO ./frontend
+          docker push $FRONTEND_REPO
