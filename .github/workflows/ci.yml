@@ -1,62 +1,57 @@
-name: CI/CD Pipeline
+name: CI/CD pipeline
 
 on:
   push:
     branches:
       - main
 
+env:
+  AWS_REGION: eu-north-1
+  BACKEND_RDS_REPO: 084375565324.dkr.ecr.eu-north-1.amazonaws.com/bookstore-backend-rds
+  BACKEND_REDIS_REPO: 084375565324.dkr.ecr.eu-north-1.amazonaws.com/bookstore-backend-redis
+  FRONTEND_REPO: 084375565324.dkr.ecr.eu-north-1.amazonaws.com/bookstore-frontend
+
 jobs:
-  build-and-push:
-    name: Build Docker images & Push to ECR
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-north-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push Docker images
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      run: |
-        docker build -t $ECR_REGISTRY/backend-rds:latest ./bookstore-backend_rds
-        docker push $ECR_REGISTRY/bookstore-backend-rds:latest
+      - name: Build and push backend-rds image
+        run: |
+          docker build -t $BACKEND_RDS_REPO:latest ./backend_rds
+          docker push $BACKEND_RDS_REPO:latest
 
-        docker build -t $ECR_REGISTRY/bookstore-backend-redis:latest ./backend_redis
-        docker push $ECR_REGISTRY/bookstore-backend-redis:latest
+      - name: Build and push backend-redis image
+        run: |
+          docker build -t $BACKEND_REDIS_REPO:latest ./backend_redis
+          docker push $BACKEND_REDIS_REPO:latest
 
-        docker build -t $ECR_REGISTRY/frontend:latest ./bookstore-frontend
-        docker push $ECR_REGISTRY/bookstore-frontend:latest
+      - name: Build and push frontend image
+        run: |
+          docker build -t $FRONTEND_REPO:latest ./frontend
+          docker push $FRONTEND_REPO:latest
 
-  deploy:
-    name: Deploy to EC2 server
-    needs: build-and-push
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Add SSH key
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-        ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-    - name: Pull and deploy on EC2
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          cd ~/bookstore
-          git pull origin main
-          docker-compose down
-          docker-compose up --build -d
-        EOF
+      - name: Pull and deploy on EC2
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+          chmod 400 key.pem
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ~/bookstore
+            git pull origin main
+            docker-compose down
+            docker-compose up --build -d
+          EOF
