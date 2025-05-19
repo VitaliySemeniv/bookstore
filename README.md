@@ -150,3 +150,4 @@ Congratulations on successfully setting up and integrating your bookstore applic
 This project not only demonstrates the fundamentals of scalable and efficient application design but also equips you with the skills to deploy and manage real-world systems. Keep exploring, iterating, and improving as you grow in your DevOps journey. 
 
 Great work!
+##оновлення для тестування CI/CD
