@@ -29,14 +29,14 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        docker build -t $ECR_REGISTRY/backend-rds:latest ./backend_rds
-        docker push $ECR_REGISTRY/backend-rds:latest
+        docker build -t $ECR_REGISTRY/backend-rds:latest ./bookstore-backend_rds
+        docker push $ECR_REGISTRY/bookstore-backend-rds:latest
 
-        docker build -t $ECR_REGISTRY/backend-redis:latest ./backend_redis
-        docker push $ECR_REGISTRY/backend-redis:latest
+        docker build -t $ECR_REGISTRY/bookstore-backend-redis:latest ./backend_redis
+        docker push $ECR_REGISTRY/bookstore-backend-redis:latest
 
-        docker build -t $ECR_REGISTRY/frontend:latest ./frontend
-        docker push $ECR_REGISTRY/frontend:latest
+        docker build -t $ECR_REGISTRY/frontend:latest ./bookstore-frontend
+        docker push $ECR_REGISTRY/bookstore-frontend:latest
 
   deploy:
     name: Deploy to EC2 server
