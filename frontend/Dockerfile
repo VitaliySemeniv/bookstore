@@ -1,7 +1,9 @@
-FROM nginx:alpine
+FROM python:3.10
 
-# Копіюємо файл
-COPY ./templates/index.html /usr/share/nginx/html/index.html
+WORKDIR /app
 
-# Встановлюємо правильні права доступу
-RUN chmod 644 /usr/share/nginx/html/index.html
+COPY . /app
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:80"] 

@@ -1,45 +1,41 @@
 version: "3.9"
 
+networks:
+  app_network:
+
 services:
-  postgres:
-    image: postgres
-    environment:
-      POSTGRES_DB: bookstore
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  redis:
-    image: redis
-
-  backend_rds:
+  backendrds:
     build: ./backend_rds
+    container_name: backend-rds
     ports:
       - "8000:8000"
-    depends_on:
-      - postgres
+    env_file:
+      - .env
     environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=bookstore
-      - DB_USER=user
-      - DB_PASSWORD=password
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    networks:
+      - app_network
 
-  backend_redis:
+  backendredis:
     build: ./backend_redis
+    container_name: backend-redis
     ports:
       - "8001:8001"
-    depends_on:
-      - redis
+    env_file:
+      - .env
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    networks:
+      - app_network
 
   frontend:
     build: ./frontend
     ports:
-      - "3000:80"
-
-volumes:
-  postgres_data:
+      - "80:80"
+    env_file:
+      - .env
+    depends_on:
+      - backendrds
+      - backendredis
+    networks:
+      - app_network
